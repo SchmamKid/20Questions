@@ -10,6 +10,7 @@ import io.ktor.http.content.*
 import io.ktor.request.receiveParameters
 import io.ktor.response.*
 import io.ktor.routing.*
+import com.api.igdb.*
 import kotlinx.html.*
 
 
@@ -20,6 +21,8 @@ fun Application.module() {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
         outputFormat = HTMLOutputFormat.INSTANCE
     }
+//    val value = Question.testRequest()
+   // println(value)
     routing {
         static("/static"){
             resources("files")
