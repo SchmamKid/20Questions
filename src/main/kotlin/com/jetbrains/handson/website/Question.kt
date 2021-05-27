@@ -2,13 +2,17 @@
 package com.jetbrains.handson.website
 import com.api.igdb.apicalypse.APICalypse
 import com.api.igdb.apicalypse.Sort
+import com.api.igdb.exceptions.RequestException
 import com.api.igdb.request.IGDBWrapper
+import com.api.igdb.request.IGDBWrapper.apiJsonRequest
 import com.api.igdb.request.TwitchAuthenticator
+import com.api.igdb.utils.*
 import com.api.igdb.request.games
+import com.api.igdb.request.jsonGames
 import proto.Game
 
 object Question {
-    fun testRequest(): List<Game> {
+    fun testRequest(): String {
 
         val token =
             TwitchAuthenticator.requestTwitchToken("7txv9blv7ojfoa07i9vchha77pg5ce", "b54a532g0mivuj9sdv3xcpibgjno4h")
@@ -19,7 +23,32 @@ object Question {
                 it.access_token
             )
         }
-        return IGDBWrapper.games(
+        /*(val json: String = apiJsonRequest(Endpoints.GAMES, "fields *;")
+        val apicalypse = APICalypse().fields("*").sort("release_dates.date", Sort.DESCENDING)
+
+        try {
+            val json: String = apiJsonRequest(Endpoints.GAMES, "fields *;")
+            return json
+        } catch (e: RequestException) {
+            println("Didnt Work")
+            //val other: List<Game> = emptyList()
+            return ""
+        }
+        */
+        println(apiJsonRequest(Endpoints.GAMES, "fields *;"))
+        val apicalypse = APICalypse()
+            .fields("*")
+            .exclude("*")
+            .limit(10)
+            .offset(0)
+            .search("Halo")
+            .sort("release_dates.date", Sort.ASCENDING)
+            .where("platforms = 48")
+        val query = apicalypse.buildQuery()
+        println(query)
+        val json: String = apiJsonRequest(Endpoints.GAMES, "'Halo';f *;x *;l 10;o 0;s release_dates.date asc;w platforms = 48;")
+        return json
+        /*return IGDBWrapper.games(
             APICalypse()
                 .fields("*")
                 .exclude("*")
@@ -28,6 +57,6 @@ object Question {
                 .search("Halo")
                 .sort("release_dates.date", Sort.ASCENDING)
                 .where("platforms = 48")
-        )
+        )*/
     }
 }

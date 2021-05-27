@@ -21,8 +21,8 @@ fun Application.module() {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
         outputFormat = HTMLOutputFormat.INSTANCE
     }
-//    val value = Question.testRequest()
-   // println(value)
+    println(Question.testRequest())
+
     routing {
         static("/static"){
             resources("files")
