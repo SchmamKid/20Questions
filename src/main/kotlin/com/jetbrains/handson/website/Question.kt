@@ -36,17 +36,11 @@ object Question {
         }
         */
         println(apiJsonRequest(Endpoints.GAMES, "fields *;"))
-        val apicalypse = APICalypse()
-            .fields("*")
-            .exclude("*")
-            .limit(10)
-            .offset(0)
-            .search("Halo")
-            .sort("release_dates.date", Sort.ASCENDING)
-            .where("platforms = 48")
+        val apicalypse = APICalypse().fields("name").search("Halo").where("platforms = 49");
+
         val query = apicalypse.buildQuery()
         println(query)
-        val json: String = apiJsonRequest(Endpoints.GAMES, "'Halo';f *;x *;l 10;o 0;s release_dates.date asc;w platforms = 48;")
+        val json: String = apiJsonRequest(Endpoints.GAMES, query)
         return json
         /*return IGDBWrapper.games(
             APICalypse()

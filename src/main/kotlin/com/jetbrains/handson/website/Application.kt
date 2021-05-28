@@ -12,6 +12,8 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import com.api.igdb.*
 import kotlinx.html.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -32,9 +34,15 @@ fun Application.module() {
         }
         post("/submit") {
             val params = call.receiveParameters()
+            val output = Question.testRequest()
+            val json =  JSONArray(output)
             val headline = params["headline"] ?: return@post call.respond(HttpStatusCode.BadRequest)
             val body = params["body"] ?: return@post call.respond(HttpStatusCode.BadRequest)
-            val newEntry = BlogEntry(headline, body)
+            val headline1 = json.getJSONObject(0)
+            var headline2 = headline1.getInt("id")
+            val s = String.format("%d", headline2)
+            val body1 = headline1.getString("name")
+            val newEntry = BlogEntry(s, body1)
             blogEntries.add(0, newEntry)
             // TODO: send a status page to the user
             call.respond(FreeMarkerContent("entry.ftl", mapOf("entries" to blogEntries), ""))
